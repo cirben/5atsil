@@ -1,0 +1,77 @@
+1.1
+openssl genrsa -aes256 -out privkeyA.pem  
+
+1.2
+openssl req -new -key privkeyA.pem -out certA.csr
+
+openssl genrsa -aes256 -out privkeyB.pem 
+openssl req -new -x509 -key privkeyB.pem -out CAcert.crt -days 15
+openssl x509 -req -days 45 -in certA.csr -CA CAcert.crt -CAkey privkeyB.pem -set_serial 01 -out certA.crt
+
+
+3.1
+strona z listy 4
+
+3.2
+Te w ktorych przegladarka ma zweryfikowany certyfikat strony tzn certyfikat strony jest rootem.
+
+3.3
+http:
+
+Server Software:        Apache/2.4.23
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /lista4
+Document Length:        232 bytes
+
+Concurrency Level:      1
+Time taken for tests:   0.000 seconds
+Complete requests:      1
+Failed requests:        0
+Non-2xx responses:      1
+Total transferred:      512 bytes
+HTML transferred:       232 bytes
+Requests per second:    2079.00 [#/sec] (mean)
+Time per request:       0.481 [ms] (mean)
+Time per request:       0.481 [ms] (mean, across all concurrent requests)
+Transfer rate:          1039.50 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       0
+Processing:     0    0   0.0      0       0
+Waiting:        0    0   0.0      0       0
+Total:          0    0   0.0      0       0
+
+
+https:
+
+Server Software:        Apache/2.4.23
+Server Hostname:        localhost
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.2,ECDHE-RSA-AES256-GCM-SHA384,2048,256
+
+Document Path:          /
+Document Length:        470 bytes
+
+Concurrency Level:      1
+Time taken for tests:   0.004 seconds
+Complete requests:      1
+Failed requests:        0
+Total transferred:      720 bytes
+HTML transferred:       470 bytes
+Requests per second:    225.12 [#/sec] (mean)
+Time per request:       4.442 [ms] (mean)
+Time per request:       4.442 [ms] (mean, across all concurrent requests)
+Transfer rate:          158.29 [Kbytes/sec] received
+
+Connection Times (ms)
+	              min  mean[+/-sd] median   max
+				  Connect:        3    3   0.0      3       3
+				  Processing:     1    1   0.0      1       1
+				  Waiting:        1    1   0.0      1       1
+				  Total:          4    4   0.0      4       4
+
+
+Jak widac po wartosciach transfer rate, szyfrowanie i deszyfrowanie informacji ustalonym kluczem sesyjnym zajmuje najwięcej czasu. Weryfikacja certyfikatu hosta zajmuje troche czasu ale tylko jednorazowo.
